@@ -1,0 +1,26 @@
+{
+  "name": "variable-starkex",
+  "version": "0.0.1",
+  "description": "Starkex playground",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VariableXchange/StarkEx-Playground.git"
+  },
+  "author": "Santosh A",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VariableXchange/StarkEx-Playground/issues"
+  },
+  "homepage": "https://github.com/VariableXchange/StarkEx-Playground#readme",
+  "dependencies": {
+    "@starkware-industries/starkex-js": "^0.1.0",
+    "@starkware-industries/starkware-crypto-utils": "^0.0.2",
+    "dotenv": "^16.0.3",
+    "ethers": "^5.7.2"
+  }
+}

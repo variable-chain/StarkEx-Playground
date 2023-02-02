@@ -2,7 +2,7 @@ import ethers from 'ethers';
 import dotenv from 'dotenv';
 import stark from '@starkware-industries/starkware-crypto-utils';
 import {perpAbi,erc20ABI,starkEXL1ABI} from './constant/starkperpABI.js';
-import {depositL1,selfMintAndAllowance} from './deposit.js';
+import {depositL1,selfMintAndAllowance,deriveStarkKey} from './helper/helper.js';
 dotenv.config();
 
 let privateKey = process.env.PVT_KEY;
@@ -14,7 +14,7 @@ let provider = new ethers.providers.getDefaultProvider(process.env.GOERLI_RPC_UR
 //let wallet = randomWallet.connect(provider);
 var wallet = new ethers.Wallet(privateKey, provider);
 
-console.log("Address: " + await wallet.getBalance());
+console.log("Balance: " + await wallet.getBalance());
 /**
  * EIP 712 Signature
  */
@@ -51,13 +51,20 @@ console.log(recoveredAddress === expectedSignerAddress);
 /**
  * Generate Stark-Key Pair
  */
+
+console.log(ethSignature.length);
 let starKPvt = stark.keyDerivation.getPrivateKeyFromEthSignature(ethSignature);
 //console.log(starKPvt);
 // Derive Stark Key from Stark PvtKey
-let starkKey = stark.keyDerivation.privateToStarkKey(starKPvt);
-console.log(starKPvt.length == '3c1e9550e66958296d11b60f8e8e7a7ad990d07fa65d5f7652c4a6c87d4e3cc'.length);
-let sk = stark.keyDerivation.privateToStarkKey("3c1e9550e66958296d11b60f8e8e7a7ad990d07fa65d5f7652c4a6c87d4e3cc")
-console.log(starkKey,sk,starkKey.length==sk.length);
+
+
+//--------
+//let starkKey = stark.keyDerivation.privateToStarkKey(starKPvt); //Doesn't work make an issue
+
+let starkKey = deriveStarkKey(stark,starKPvt);
+//
+//let sk = stark.keyDerivation.privateToStarkKey("3c1e9550e66958296d11b60f8e8e7a7ad990d07fa65d5f7652c4a6c87d4e3cc")
+//console.log(ethers.BigNumber.from(starkKey));
 /**
  * Mint 10000 ERC20 tokens to current address
  */
@@ -66,11 +73,9 @@ const selfMintContract = new ethers.Contract( process.env.SELFMINT_ERC20 , erc20
 /**
  * Deposit 1 ETH to L1 contract.
  */
-const starkEXL1 = new ethers.Contract( process.env.STARKEX_L1_GOERLI , starkEXL1ABI , wallet );
+const starkEXL1 = new ethers.Contract( process.env.STARKEX_L1_GOERLI , perpAbi , wallet );
 
-await depositL1(starkEXL1,starkKey,'286442224669982855773917167725901379555005478797788066723536016706544965407','241535140800',10);
-
-
+await depositL1(starkEXL1,starkKey,'286442224669982855773917167725901379555005478797788066723536016706544965407','10000000',1672877706576209);
 
 
 

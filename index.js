@@ -7,6 +7,8 @@ import {
   selfMintAndAllowance,
   deriveStarkKey,
 } from './helper/helper.js';
+import { StarkExApi } from './StarkExAPI/starkexApi.js';
+
 dotenv.config();
 
 let privateKey = process.env.PVT_KEY;
@@ -62,7 +64,7 @@ console.log(recoveredAddress === expectedSignerAddress);
  * Generate Stark-Key Pair
  */
 
-console.log(ethSignature.length);
+//console.log(ethSignature.length);
 let starKPvt = stark.keyDerivation.getPrivateKeyFromEthSignature(ethSignature);
 //console.log(starKPvt);
 // Derive Stark Key from Stark PvtKey
@@ -72,7 +74,9 @@ let starKPvt = stark.keyDerivation.getPrivateKeyFromEthSignature(ethSignature);
 
 let starkKey = deriveStarkKey(stark, starKPvt);
 //
-//let sk = stark.keyDerivation.privateToStarkKey("3c1e9550e66958296d11b60f8e8e7a7ad990d07fa65d5f7652c4a6c87d4e3cc")
+//let sk = stark.keyDerivation.privateToStarkKey("3c1e9550e66958296d11b60f8e8e7a7ad990d07fa65d5f7652c4a6c87d4e3cc");
+// let sk = deriveStarkKey(stark,'3c1e9550e66958296d11b60f8e8e7a7ad990d07fa65d5f7652c4a6c87d4e3cc');
+// console.log(sk.toString(16));
 //console.log(ethers.BigNumber.from(starkKey));
 /**
  * Mint 10000 ERC20 tokens to current address
@@ -96,13 +100,27 @@ const starkEXL1 = new ethers.Contract(
   wallet
 );
 
-// await depositL1(
-//   starkEXL1,
-//   starkKey,
-//   '286442224669982855773917167725901379555005478797788066723536016706544965407',
-//   '10000000',
-//   1672877706576209
-// );
+const L1Deposit =await depositL1(
+  starkEXL1,
+  starkKey,
+  '286442224669982855773917167725901379555005478797788066723536016706544965407',
+  '100000000',
+  197
+);
+
+
+ let tx_id =await StarkExApi.gateway.getFirstUnusedTxId();
+  console.log(tx_id,'tx');
+  await StarkExApi.gateway.depositRequest(tx_id,197,starkKey,'100000000');
+  // await StarkExApi.feederGateway.getLastBatchId();
+  // await StarkExApi.feederGateway.getBatchInfo(33);
+
+
+
+
+
+
+
 
 // starkKey	uint256	2587867597115725164017062332945393781445735019102996832976163951690087003283
 // 1	assetType	uint256	286442224669982855773917167725901379555005478797788066723536016706544965407
@@ -114,26 +132,26 @@ const starkEXL1 = new ethers.Contract(
 // [2]:  0000000000000000000000000000000000000000000000000005f17931740151
 // [3]:  0000000000000000000000000000000000000000000000000000000000989680
 
-import axios from 'axios';
+//import axios from 'axios';
 
-axios
-  .get('https://perpetual-playground-v2.starkex.co/get_first_unused_tx_id')
-  .then(function (response) {
-    console.log('get_first_unused_tx_id : ', response.data);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+// axios
+//   .get('https://perpetual-playground-v2.starkex.co/get_first_unused_tx_id')
+//   .then(function (response) {
+//     console.log('get_first_unused_tx_id : ', response.data);
+//   })
+//   .catch(function (error) {
+//     console.log(error);
+//   });
 
 // axios
 //   .post('https://perpetual-playground-v2.starkex.co/add_transaction', {
-//     tx_id: 200,
+//     tx_id: 116,
 //     tx: {
-//       position_id: '1672877706576209',
+//       position_id: '1672877706576420',
 //       public_key:
-//         '0x05b8ae6015780ff48ee5f7d444e3a4fb3d1821ed031e3ad561963f66d135f493',
+//         '116426286008000944307409139386885614966914967113770466166284866523594774234',
 //       // '2587867597115725164017062332945393781445735019102996832976163951690087003283',
-//       amount: '10000000',
+//       amount: '100000000',
 //       type: 'DEPOSIT',
 //     },
 //   })
@@ -144,38 +162,7 @@ axios
 //     console.log(error);
 //   });
 
-axios
-  .get(
-    'https://perpetual-playground-v2.starkex.co/feeder_gateway/get_last_batch_id'
-  )
-  .then(function (response) {
-    console.log('last batch id : ', response.data);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
 
-axios
-  .get(
-    'https://perpetual-playground-v2.starkex.co/feeder_gateway/get_batch_info?batch_id=33'
-  )
-  .then(function (response) {
-    console.log('34 batch id : ', response.data);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-
-axios
-  .post(
-    'https://perpetual-playground-v2.starkex.co/feeder_gateway/get_batch_info?batch_id=33'
-  )
-  .then(function (response) {
-    console.log('33 batch id : ', response.data);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
 
 // {
 //   "amount": "7758176404715800194",

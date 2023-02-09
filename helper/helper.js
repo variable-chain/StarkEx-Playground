@@ -5,9 +5,9 @@ export const depositL1 = async (
   qAmt,
   vaultId
 ) => {
-  //    console.log(starkKey,assetType,vaultId,qAmt);
+  // console.log(starkKey,assetType,vaultId,qAmt);
   const tx = await contract.deposit(starkKey, assetType, vaultId, qAmt);
-  tx.wait().then((r) => console.log(r));
+  tx.wait().then((r) => {return true; console.log(r)});
 };
 
 export const selfMintAndAllowance = async (

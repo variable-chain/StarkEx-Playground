@@ -7,7 +7,8 @@ export const depositL1 = async (
 ) => {
   // console.log(starkKey,assetType,vaultId,qAmt);
   const tx = await contract.deposit(starkKey, assetType, vaultId, qAmt);
-  tx.wait().then((r) => {return true; console.log(r)});
+
+  tx.wait().then((r) => { console.log(r);return true;});
 };
 
 export const selfMintAndAllowance = async (
@@ -36,6 +37,6 @@ export const deriveStarkKey = (stark, starKPvt) => {
     keyPair.getPublic(true, 'hex'),
     'hex'
   );
-  const publicKeyX = publicKey.pub.getX().toString();
-  return publicKeyX;
+  const publicKeyX = publicKey.pub.getX().toString(16);
+  return '0x'+publicKeyX;
 };

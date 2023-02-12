@@ -8,6 +8,7 @@ import {
   deriveStarkKey,
 } from './helper/helper.js';
 import { StarkExApi } from './StarkExAPI/starkexApi.js';
+import axios from 'axios';
 
 dotenv.config();
 
@@ -70,9 +71,9 @@ let starKPvt = stark.keyDerivation.getPrivateKeyFromEthSignature(ethSignature);
 // Derive Stark Key from Stark PvtKey
 
 //--------
-//let starkKey = stark.keyDerivation.privateToStarkKey(starKPvt); //Doesn't work make an issue
+let starkKey = stark.keyDerivation.privateToStarkKey(starKPvt); //Doesn't work make an issue
 
-let starkKey = deriveStarkKey(stark, starKPvt);
+//let starkKey = deriveStarkKey(stark, starKPvt);
 //
 //let sk = stark.keyDerivation.privateToStarkKey("3c1e9550e66958296d11b60f8e8e7a7ad990d07fa65d5f7652c4a6c87d4e3cc");
 // let sk = deriveStarkKey(stark,'3c1e9550e66958296d11b60f8e8e7a7ad990d07fa65d5f7652c4a6c87d4e3cc');
@@ -99,22 +100,58 @@ const starkEXL1 = new ethers.Contract(
   perpAbi,
   wallet
 );
+let asset_id = '0xa21edc9d9997b1b1956f542fe95922518a9e28ace11b7b2972a1974bf5971f';
+//console.log('286442224669982855773917167725901379555005478797788066723536016706544965407'.toString(16));
+// const L1Deposit =await depositL1(
+//   starkEXL1,
+//   starkKey,
+//   '286442224669982855773917167725901379555005478797788066723536016706544965407',
+//   '100000000',
+//   111
+// );
 
-const L1Deposit =await depositL1(
-  starkEXL1,
-  starkKey,
-  '286442224669982855773917167725901379555005478797788066723536016706544965407',
-  '100000000',
-  197
-);
+
+   let tx_id =await StarkExApi.gateway.getFirstUnusedTxId();
+    console.log(tx_id,'tx');
+  // await StarkExApi.gateway.depositRequest(tx_id,111,starkKey,'100000000');
+  // amount: amount,
+  // asset_id: asset_id,
+  // expiration_timestamp: "2404381470",
+  // nonce: "1",
+  // receiver_position_id: "101",
+  // receiver_public_key: "0x259f432e6f4590b9a164106cf6a659eb4862b21fb97d43588561712e8e5216b",
+  // sender_position_id: sVaultId,
+  // sender_public_key: '0x'+starkKey,
+   let msgHash = stark.getTransferMsgHash('2000000','1','111',asset_id,'101','0x259f432e6f4590b9a164106cf6a659eb4862b21fb97d43588561712e8e5216b','2000000');
+   console.log(msgHash);
+   const keyPair = stark.ec.keyFromPrivate(starKPvt, 'hex');
+   let sig = stark.sign(keyPair, msgHash);
+  let {r,s} = sig;
+//Verify signature matches message and stark key.
+console.log(stark.verify(keyPair, msgHash, sig),r.toString(16),s.toString(16));
 
 
- let tx_id =await StarkExApi.gateway.getFirstUnusedTxId();
-  console.log(tx_id,'tx');
-  await StarkExApi.gateway.depositRequest(tx_id,197,starkKey,'100000000');
-  // await StarkExApi.feederGateway.getLastBatchId();
-  // await StarkExApi.feederGateway.getBatchInfo(33);
-
+await StarkExApi.gateway.transfer(tx_id,asset_id,'2000000',starkKey,'111','0x'+r.toString(16),'0x'+s.toString(16));
+//    await StarkExApi.feederGateway.getLastBatchId();
+//    await StarkExApi.feederGateway.getBatchInfo(34);
+//0x0041e51af62d1a133c03691620777b9430c2d00c2d09b41bd36cafd23f5c56da
+// console.log(starkKey);
+// axios
+//   .post('https://perpetual-playground-v2.starkex.co/add_transaction', {
+//     tx_id: tx_id,
+//     tx: {
+//       position_id: '111',
+//       public_key: '0x'+starkKey,
+//       amount: '100000000',
+//       type: 'DEPOSIT',
+//     },
+//   })
+//   .then(function (response) {
+//     console.log(response);
+//   })
+//   .catch(function (error) {
+//     console.log(error);
+//   });
 
 
 

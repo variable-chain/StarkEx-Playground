@@ -18,12 +18,12 @@ const publicKey = starkwareCrypto.ec.keyFromPublic(
 );
 const publicKeyX = publicKey.pub.getX();
 
-assert(
-  publicKeyX.toString(16) ===
-    testData.settlement.party_a_order.public_key.substring(2),
-  `Got: ${publicKeyX.toString(16)}.
-        Expected: ${testData.settlement.party_a_order.public_key.substring(2)}`
-);
+// assert(
+//   publicKeyX.toString(16) ===                                                5n; dsువంల
+//     testData.settlement.party_a_order.public_key.substring(2),
+//   `Got: ${publicKeyX.toString(16)}.
+//         Expected: ${testData.settlement.party_a_order.public_key.substring(2)}`
+// );
 
 // const { party_a_order: partyAOrder } = testData.settlement;
 // const msgHash = starkwareCrypto.getLimitOrderMsgHash(

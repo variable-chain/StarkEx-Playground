@@ -25,7 +25,7 @@ gateway:{
           tx_id: txId,
           tx: {
             position_id: vault_id.toString(),
-            public_key: '0x'+starkKey,
+            public_key: starkKey,
             amount: amount,
             type: 'DEPOSIT',
           },
@@ -45,10 +45,10 @@ gateway:{
                 
                     amount: amount,
                     asset_id: asset_id,
-                    expiration_timestamp: "2000000",
-                    nonce: "1",
-                    receiver_position_id: "101",
-                    receiver_public_key: "0x259f432e6f4590b9a164106cf6a659eb4862b21fb97d43588561712e8e5216b",
+                    expiration_timestamp: '438953',
+                    nonce: '2',
+                    receiver_position_id: '123',
+                    receiver_public_key: "0x5fa3383597691ea9d827a79e1a4f0f7949435ced18ca9619de8ab97e661020",
                     sender_position_id: sVaultId,
                     sender_public_key: '0x'+starkKey,
                     signature: {

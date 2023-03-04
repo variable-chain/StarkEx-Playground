@@ -22,5 +22,8 @@
     "@starkware-industries/starkware-crypto-utils": "^0.0.2",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2"
+  },
+  "devDependencies": {
+    "assert": "^2.0.0"
   }
 }
